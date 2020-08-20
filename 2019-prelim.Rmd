@@ -2,7 +2,9 @@
 title: "2019-prelim"
 author: "Will Gertsch"
 date: "8/14/2020"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 $$
 OR = e^{\beta_{3}} = e^{.071293} = 1.073896
 $$
-The odds of a miss for males is 1.07 the odds off a miss if female, holding all else constant.
+The odds of a miss for males is 1.07 the odds of a miss if female, holding all else constant.
 
 ## b
 Solving for the probability, we get
@@ -94,7 +96,7 @@ Could use either $\chi^2$-goodness of fit or deviance test.
 ## e
 If $\lambda \sim \gamma(\alpha, \beta)$ in $Y \sim Poisson(\lambda)$, then Y is negative binomial. The mean of Poisson and negative binomial are the same, but the variances are different. Specifically, the variance of the negative binomial is allowed to be larger. this means that if the data was really Poisson, the negative binomial model would over estimate the variance and we would have underdispersion.
 
-# 5
+# 3
 ## a
 Use the CDF method:
 $$
@@ -280,8 +282,10 @@ $$
 \end{bmatrix}^{-1}
 \right)
 $$
+
 ## c
-$\mu = a/b$, therefore $\hat \mu = \hat a/\hat b$ by the invariance property of MLEs. We can use to 2nd likelihood equation from before to say that $\hat \mu = \bar X$. Therefore
+
+$\mu = a/b$, therefore $\hat \mu = \hat a/\hat b$ by the invariance property of MLEs. We can use the 2nd likelihood equation from before to say that $\hat \mu = \bar X$. Therefore
 $$
 \hat \mu \dot\sim N\left(\mu, \frac{Var X}{n}\right) = N\left(\mu, \frac{a}{nb^2}\right)
 $$
@@ -301,6 +305,21 @@ $$
 $$
 
 To show consistency, we will use the continuous mapping theorem.
+$$
+\tilde b_n = g(\bar X) = \frac{na + \alpha}{ n \bar X + \beta} = \frac{na}{n \bar X + \beta} + \frac{\alpha}{n \bar X + \beta} = \frac{a}{\bar X + \beta/n} + \frac{1}{n}\frac{a}{\bar X + \beta/n}
+$$
+As $n \to \infty$, $g(\bar X) \to^p g(\mu)$ and the second term will go to zero while the $\beta$ drops out of the first term. $\mu = a/b$.
+$$
+g(\bar X) \to^p g(\mu) = \frac{a}{a/b} = b
+$$
 
 ## e
-
+The hypotheses are $H_0: a_x = a_y, b_x = b_y$ and $H_A : a_x \neq x_y, b_x \neq b_y$. We will use a likelihood ratio test. The likelihood for the alternative model is
+$$
+L(\hat \theta) = \prod^n_i \frac{\hat b_x^{\hat a_x}}{\Gamma(\hat a_x)} x_i^{\hat a_x-1}e^{-\hat b_x x_i} \prod_j^m \frac{\hat b_y^{\hat a_y}}{\Gamma(\hat a_y)} y_i^{\hat a_y-1}e^{-\hat b_y y_i}
+$$
+$L(\theta_0)$ will be the same, but with $\hat a_0, \hat b_0$ as the estimates for the parameters of both distributions. The test statistic is the log-likelihood ratio statistic
+$$
+2 \log \frac{L(\hat \theta)}{L(\theta_0)} \dot \sim \chi^2_{2}
+$$
+The alternative model has 4 parameters while the null model has 2 parameters. Hence the difference in degrees of freedom is 2.
