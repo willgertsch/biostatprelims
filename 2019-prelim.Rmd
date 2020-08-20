@@ -229,3 +229,78 @@ No, she is accepting the null hypothesis. Suppose we used 0.8 as the null value.
 I also did a Bayesian analysis of this for fun.
 
 Suppose we model the data as binomial and use the conjugate prior $p \sim Beta(1,1) = U(0,1)$. The posterior distribution is $p|Y \sim Beta(11,1)$. The mode of the posterior is 1 since the prior is uninformative and all the data are 1. The 95% credible interval is (0.7277416, 0.9970675). This supports my conclusion that she probably shouldn't claim that the true coverage is 90%.
+
+# 5
+
+## a
+Likelihood:
+$$
+L(a,b) = \left(\frac{b^a}{\Gamma(a)}\right)^n \left(\prod x_i\right)^{a-1} e^{-b\sum x_i}
+$$
+Log-likelihood:
+$$
+\ell(a,b) = na\log(b)-n\log(\Gamma(a)) + (a-1)\sum \log x_i - b \sum x_i
+$$
+Take the first derivative and set equal to zero to obtain likelihood equations:
+$$
+\frac{\partial }{\partial a} \ell(a,b) = n \log b - \frac{n \Gamma'(a)}{\Gamma(a)} +\sum \log x_i = 0
+$$
+$$
+\frac{\partial }{\partial b} \ell(a,b) = \frac{na}{b} - \sum x_i = 0
+$$
+
+## b
+This is were I needed help. I found this problem was assigned when Dr. Telesca  taught the course.
+$$
+I_n(a,b) = -E \begin{bmatrix} \frac{\partial^2 \ell}{\partial a^2} & \frac{\partial^2 \ell}{\partial a \partial b}\\ \frac{\partial^2 \ell}{\partial b \partial a} & \frac{\partial^2 \ell}{\partial b^2}\end{bmatrix} = 
+-E \begin{bmatrix} 
+-n\psi'(a) & \frac{n}{b}\\
+\frac{n}{b} & -\frac{na}{b^2}
+\end{bmatrix} 
+$$
+where $\psi(a) = \frac{\Gamma'(a)}{\Gamma(a)}$. Therefore
+$$
+I_n(a,b) = n\begin{bmatrix}
+\psi'(a) & -1/b\\
+-1/b & a/b^2
+\end{bmatrix}
+$$
+
+The mles follow the joint asymptotic distribution
+$$
+\begin{bmatrix}
+\hat a\\ \hat b
+\end{bmatrix} = 
+\operatorname{MVN}\left( \begin{bmatrix}
+ a\\  b
+\end{bmatrix}
+, \frac{1}{n} \begin{bmatrix}
+\psi'(a) & -1/b\\
+-1/b & a/b^2
+\end{bmatrix}^{-1}
+\right)
+$$
+## c
+$\mu = a/b$, therefore $\hat \mu = \hat a/\hat b$ by the invariance property of MLEs. We can use to 2nd likelihood equation from before to say that $\hat \mu = \bar X$. Therefore
+$$
+\hat \mu \dot\sim N\left(\mu, \frac{Var X}{n}\right) = N\left(\mu, \frac{a}{nb^2}\right)
+$$
+
+## d
+By Bayes theorem
+$$
+P(b | X) \propto P(X|b)P(b) \propto (b^a)^n e^{-b \sum x_i}b^{\alpha-1}e^{-\beta b} = b^{na + \alpha-1}e^{-b(\sum x_i + \beta)}
+$$
+Therefore the posterior is
+$$
+b|X \sim \operatorname{Gamma}\left( na + \alpha, \sum x_i + \beta\right)
+$$
+The mean of a gamma is $a/b$, therefore the mean of the posterior is
+$$
+\tilde b_n = \frac{na + \alpha}{\sum x_i + \beta}
+$$
+
+To show consistency, we will use the continuous mapping theorem.
+
+## e
+
