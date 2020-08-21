@@ -122,5 +122,143 @@ $$
 The test statistic follows an approximate $\chi^2_1$ distribution with the critical value 3.84. Therefore, the interaction term does not significantly improve the model. This means that the treatment effect is the same for both races. This makes sense since the estimated treatment effect does not change very much from (c) to (b).
 
 # 4
+Thanks to John for providing this solution.
+
+## a
+Let $Y_i = F(X_i)$. The CDF of $Y_i$ is
+$$
+P(Y_i \leq y) = P(F(X_i) \leq y) = P(X_i \leq F^{-1}(y)) = F(F^{-1}(y)) = y
+$$
+Therefore $Y_i \sim U(0,1)$ since the CDF of a uniform is $\frac{y-a}{b-a}$.
+
+Thus the pdf of $Y_i$ is 1 and the joint pdf of all the $Y_i 's$ is 1 for $0 < y_i < 1$.
+
+## b
+$$
+P(F(X_{(1)}) \leq 0.5) = P(X_{(1)} \leq F^{-1}(0.5)) = 1-P(X_{(1)} > F^{-1}(0.5))
+$$
+Now break up the inequality using the defintion of the minimum.
+$$
+1-P(X_{(1)} > F^{-1}(0.5)) = 1 - P\left(X_1 > F^{-1}(0.5), \dots, X_n > F^{-1}(0.5)\right)
+$$
+Since the $X_i's$ are iid, we can rewite as
+$$
+= 1-\prod_{i=1}^n P(X_i > F^{-1}(0.5)) = 1-P(X_i > F^{-1}(0.5))^n = 1-\left[1 - F(F^{-1}(0.5)) \right]^n
+$$
+So the final answer is
+$$
+= 1-(1/2)^n
+$$
+I had originally though that the answer would be 1 since $P(X_{(1)}\leq F^{-1}(0.5))$ seems to be asking about the min being less than the median. The trick is that $X_{(1)}$ is the min of the sample while $F^{-1}(0.5)$ is the theoretical median.
+
+I also ran a simulation that confirms the result.
+```{r}
+n = 2 # sample size
+S = 1e6 # number of simulations
+ind = numeric(S) # whether inequality holds
+mins = numeric(S)
+for (i in 1:S) { # takes a little while to run if n is big
+  X <- rnorm(n) # sample from continuous distr
+  mins[i] = min(X)
+  ind[i] = pnorm(mins[i]) <= 0.5 
+}
+
+mean(ind) # prob that min is less than median
+1-(1/2)^n # theoretical value
+```
+
+## c
+The joint distribution of $X_{(1)}$ and $X_{(n)}$ is
+$$
+f_{X_{(1)}, X_{(n)}}(u, v) = \frac{n!}{(n-1)!(n-2)!} \cdot 1 \cdot 1\cdot(v-u)^{n-2}(1-v)^{n-1} = \frac{n}{(n-2)!}(v-u)^{n-2}(1-v)^{n-1}
+$$
+for $0 < u,v < 1$.
 
 # 5
+
+## a
+By the central limit theorem
+$$
+\sqrt{n}(\bar X - \theta^{-1}(1- \theta)) \to^D N(0, \theta^{-2}(1-\theta))
+$$
+## b
+We will use the continuous mapping theorem.
+$$
+\tilde \theta = \frac{n+(1+\bar X)}{(n+1)(1+\bar X)} = \frac{n}{n+1}\frac{1}{1+ \bar X} + \frac{1}{n+1}
+$$
+As $n \to \infty$, $n/(n+1) \to 1$ and $1/(n+1) \to 0$. By the continuous mapping theorem, $1/(1 + \bar X) \to^p 1/(1 + \mu)$. Therefore, 
+$$
+\tilde \theta \to^p \frac{1}{1 + \frac{1-\theta}{\theta}} = \theta
+$$
+To find the limiting distribution, use the delta method. First, let
+$$
+\tilde \theta = g(\bar X) = \frac{n}{n+1}\frac{1}{1+ \bar X} + \frac{1}{n+1}
+$$
+$$
+g'(x) = -\frac{n}{n+1}\frac{1}{(1+x)^2}
+$$
+$$
+g(\mu) = g(\theta^{-1}(1-\theta)) = \frac{n}{n+1}\theta + \frac{1}{n+1}
+$$
+$$
+\sqrt{n}(g(\bar X) - g(\mu)) \dot \sim N\left(0, \left[ -\frac{n}{n+1}\theta^2\right]^2 \theta^{-2}(1-\theta) \right)
+$$
+Therefore the limiting distribution is 
+$$
+\sqrt{n}(g(\bar X) - g(\mu)) \to^D N\left(0, \theta^2(1-\theta) \right)
+$$
+
+
+## c
+Likelihood:
+$$
+L(\theta) = \theta^n (1-\theta)^{\sum x_i}
+$$
+Log-likelihood:
+$$
+\ell(\theta) = n\log \theta + \sum x_i \log (1-\theta)
+$$
+$$
+\frac{\partial}{\partial \theta} \ell(\theta) = \frac{n}{\theta} - \frac{\sum x_i}{1-\theta} = 0
+$$
+
+Solving this equation, $\theta = \frac{n}{\sum x_i + n}$. Check to see if $L(\theta)$ is concave.
+$$
+\ell''(\theta) = -\frac{n}{\theta^2} - \frac{\sum x_i}{(1-\theta)^2} <0
+$$
+
+Therefore the mle is
+$$
+\hat \theta = \frac{n}{\sum x_i + n} = \frac{n}{n(\bar X + 1)} = \frac{1}{\bar X + 1}
+$$
+To find the limiting distribution, we note that the mle is a function of $\bar X$. We can use this function for the delta method.
+$$
+g(x) = \frac{1}{x + 1}, g'(x) = -\frac{1}{(x+1)^2}
+$$
+$$
+g(\mu) = g\left(\frac{1-\theta}{\theta} \right) = \theta
+$$
+$$
+\sqrt{n}(g(\bar X) - g(\mu)) \to^D N\left(0, [-\theta^{2}]^2 \theta^{-2}(1-\theta) \right)
+$$
+Therefore the limiting distribution is
+$$
+N\left(0, \theta^{2}(1-\theta) \right)
+$$
+## d
+
+### (i)
+$$
+p(\theta|X)  \propto P(X|\theta)P(\theta) \propto \theta^{(a + n)-1}(1-\theta)^{\left(\sum x_i +b\right) -1}
+$$
+Therefore the posterior distribution is $\operatorname{Beta}(a + n, \sum x_i + b)$.
+
+### (ii)
+The mean of a beta distribution is $a/(a+b)$ so the mean of the posterior is
+$$
+\frac{a + n}{a + n + \sum x_i + b}
+$$
+To compute this expected value
+$$
+EX = \int_0^\infty x\frac{x^{a-1} (1-x)^{b-1}}{B(a,b)}dx = \frac{B(a+1, b)}{B(a,b)} = \frac{a}{a+b}
+$$
