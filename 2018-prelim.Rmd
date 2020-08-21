@@ -88,6 +88,38 @@ $$
 Every 10-fold unit increase in IgE is associated with a $e^{\beta_1}$ increase in the number of attacks. 
 
 # 3
+## a
+We can fit the model by noting that $e^{\beta_0 + \beta_1}$ $e^{\beta_0}$ are odds. Let $p_0 = 32/(32+81) = 0.2831858$  and $p_1 = 14/(14+93)= 0.1308411$ be the probabilities of AIDS symptoms for the standard and new treatments respectively. These correspond to odds of $\frac{p_0}{1-p_0} = 0.3950616$ and $\frac{p_1}{1-p_1} = 0.1505376$. Since $e^{\hat \beta_0}$ are the baseline odds, we can set it equal to the odds for the standard treatment.
+$$
+e^{\hat \beta_0} = 0.3950616 \implies \hat \beta_0 = -0.9287136
+$$
+To get $\hat \beta_1$, we note that that $e^{\hat \beta_1}$ is the OR of the treatments.
+$$
+e^{\hat \beta_1} = \frac{0.1505376}{0.3950616} \implies \hat \beta_1 = -0.9648289
+$$
+## b
+The easiest test we can conduct is the Wald test.
+$$
+\frac{\hat \beta}{SE(\hat \beta)} \dot \sim N(0,1)
+$$
+What is the SE of the log-odds ratio? Recall from 200A that
+$$
+SE(\hat {OR}) = \sqrt{\frac{1}{a} + \frac{1}{b} + \frac{1}{c} + \frac{1}{d}}
+$$
+Therefore, $SE(\hat \beta) = 0.3546504$. Therefore the value of the test statistic is $-0.9648289/0.3546504 = -2.720507$ which is less than the critical value of -1.96. Therefore reject the null hypothesis and conclude that the treatment significantly decreases the odds of AIDS symptoms during follow-up.
+
+## c
+Use the Wald CI
+$$
+\hat \beta_1 \pm Z_{.975} SE(\hat \beta_1) \implies -0.7195 \pm 1.96\sqrt{0.07783}
+$$
+Therefore the confidence interval is (-1.266301, -0.1726986). Since the interval does not include 0, we conclude that the treatment decreases the odds of AIDS symptoms at follow up while controlling for race. This is a stronger argument in favor of the treatment than (b) since the model is now accounting for race.
+
+## d
+$$
+-2\log \lambda = -2(-167.576 + 166.884) = 1.384
+$$
+The test statistic follows an approximate $\chi^2_1$ distribution with the critical value 3.84. Therefore, the interaction term does not significantly improve the model. This means that the treatment effect is the same for both races. This makes sense since the estimated treatment effect does not change very much from (c) to (b).
 
 # 4
 
