@@ -263,5 +263,78 @@ mean(intersect)
 Running the simulation gives answers of 0.9493 and 0.992 for a) and b) respectively. For parts c) and d), the simulation gives 0.4579 and 0.7258.
 
 # 4
+## a
+Integrate out $X_1$ to get the marginal pdf of $X_2$.
+$$
+f_{X_2} (x_2) = 2e^{-x_2}\int_0^{x_2} e^{-x_1}dx_1 = 2e^{-x_2} \left[ -e^{-x_1}\right]^{x_2}_0 =  2e^{-x_2}-2e^{-2x_2}
+$$
+
+## b
+To find the expected value, we will need the pdf of $X_1|X_2$. Recall that
+$$
+P(X_1|X_2) = \frac{P(X_1 \cap X_2)}{P(X_2)}
+$$
+Therefore, we can find the conditional pdf by dividing the joint pdf by the marginal pdf of $X_2$.
+$$
+f_{X_1|X_2}(x_1) = \frac{2e^{-(x_1 + x_2)}}{2e^{-x_2}-2e^{-2x_2}} = \frac{e^{-x_1}e^{-x_2}}{e^{-x_2}(1-e^{-x_2})} = \frac{e^{-x_1}}{(1-e^{-x_2})}
+$$
+Therefore
+$$
+E[X_1 | X_2 = 2] = \int_0^2 \frac{1}{1-e^{-2}}e^{-x_1}dx_1 = \frac{1}{1-e^{-2}}\left[ -e^{-x_1}\right]^2_0 = -\frac{e^{-2}}{1-e^{-2}} + \frac{1}{1-e^{-2}} = 1
+$$
+
+## c
+Use the cdf method.
+$$
+P(Y \leq y) = P(X_1 + X_2 \leq y) = P(X_2 \leq y - X_1)
+$$
 
 # 5
+## a
+$$
+E[S^2] = E\left[\frac{1}{n-1}\sum (x_i - \bar x)^2 \right] = \frac{1}{n-1}E\left[ \sum ((x_i -\mu)- (\bar x- \mu))^2\right]
+$$
+$$
+= \frac{1}{n-1}E\left[ \sum (x_i-\mu)^2 -2( x_i -\mu)(\bar x - \mu) + (\bar x - \mu)^2\right] 
+$$
+$$
+= \frac{1}{n-1}E \left[ \sum (x_i-\mu)^2-n(\bar x -\mu)^2\right] = \frac{1}{n-1}\left(n\sigma^2 - n\operatorname{Var}(\bar x) \right)
+$$
+$$
+= \frac{1}{n-1}\left( n\sigma^2 - \sigma^2\right) = \sigma^2
+$$
+
+## b
+Using some work from the previous part
+$$
+S^2 = \frac{1}{n-1}\left( \sum(x_i-\mu)^2 - n(\bar x - \mu)^2\right)
+$$
+
+Now let $Y_i = (x_i-\mu)^2$. Note that $EY_i = \sigma^2$. Therefore we have
+$$
+S^2 = \frac{1}{n-1}\left(\sum Y_i - EY \right)
+$$
+since $n(\bar x - \mu)^2 = n\operatorname{Var}(\bar X) = \sigma^2 = EY$. Now we can send $n \to \infty$
+$$
+S^2 = \frac{1}{n-1}\left( n \bar Y - E Y\right) = \frac{n}{n-1}\bar Y - \frac{EY}{n-1} \to^p 1 \cdot EY = \sigma^2
+$$
+by the continuous mapping theorem and the weak law of large numbers.
+
+## c
+The variance of $\bar X$ is $\theta/n$. I bet it acheives the CR lower bound. Let's take a look at the log-likelihood.
+$$
+\ell(\theta) = -n\theta + \sum x_i \log \theta - \log \prod x_i!
+$$
+Now take derivatives.
+$$
+\ell'(\theta) = -n + \frac{\sum x_i}{\theta}
+$$
+
+$$
+\ell''(\theta) = -\frac{\sum x_i}{\theta^2}
+$$
+Therefore the information is
+$$
+I = -E\left[ -\frac{\sum x_i}{\theta^2}\right] = \frac{n}{\theta}
+$$
+Therefore, $\bar X$ achieves the Cramer-Rao lower bound, i.e. there is no estimator with less variance than $\bar X$. I haven't checked to see if $S^2$ hits the lower bound (my guess is that it does not, but I would have to do the calculation to know for sure), but I would say $\bar X$ is a better estimator because it hits the lower bound for variance and is simpler than $S^2$.
