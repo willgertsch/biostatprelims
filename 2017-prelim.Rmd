@@ -101,10 +101,113 @@ Not sure that these are techinically nested models, but let's assume that they a
 $$
 F^* = \frac{\frac{2026.35534-2016.12237}{11-10}}{\frac{6678.46151}{249}} = 0.3815264
 $$
-Under $H_0$, $F^* \sim F(1, 249) \equiv t(249)$. Since the degrees of freedom are so large, we can make the approximation $t_{.975}(249) \approx Z_{.975} = 1.96$. Therefore, we fail to reject $H_0$ and conclude that the dummy variable model provides little additional explaination of the variation in MFSI compared to the original model.
+Under $H_0$, $F^* \sim F(1, 249) \equiv t(249)$. Since the degrees of freedom are so large, we can make the approximation $t_{.975}(249) \approx Z_{.975} = 1.96$. Therefore, we fail to reject $H_0$ and conclude that the dummy variable model provides little additional explanation of the variation in MFSI compared to the original model.
 
 
 # 3
+## a
+Since we know $\sigma$ is known, we can use a Z-test instead of t-test to derive the interval. $E(\bar X - \bar Y) = 0$ since $\mu_x - \mu_y = 0$. $\operatorname{Var}(\bar X - \bar Y) = \frac{25^2}{100} + \frac{25^2}{300}$ since the samples are independent. Therefore, $\bar X - \bar Y \dot\sim N(0, \frac{25^2}{100} + \frac{25^2}{300})$. Therefore we can use the usual normal CI.
+$$
+P \left(\bar X - \bar Y - 1.96*25\sqrt{\frac{1}{100} + \frac{1}{300}} < \mu_x-\mu_y < \bar X - \bar Y + 1.96*25\sqrt{\frac{1}{100} + \frac{1}{300}}\right) = .95
+$$
+Therefore, the probability that the CI includes 0 is .95 because that is literally how the CI is defined.
+
+## b
+Using the usual normal confidence intervals, the CI for $\mu_x$ is
+$$
+\bar X \pm 1.96*\frac{25}{\sqrt{100}} 
+$$
+and the CI for $\mu_y$ is
+$$
+\bar Y \pm 1.96*\frac{25}{\sqrt{300}} 
+$$
+The CI's will overlap if
+$$
+\bar Y - 1.96*\frac{25}{\sqrt{300}} < \bar X + 1.96*\frac{25}{\sqrt{100}}
+$$
+and 
+$$
+\bar X - 1.96*\frac{25}{\sqrt{100}} < \bar Y + 1.96*\frac{25}{\sqrt{300}}
+$$
+Therefore we have
+$$
+-1.96\left(\frac{25}{\sqrt{100}} + \frac{25}{\sqrt{300}}\right) < \bar X  - \bar Y  <  1.96\left(\frac{25}{\sqrt{100}} + \frac{25}{\sqrt{300}}\right)
+$$
+which is 
+$$
+-7.729016 <  \bar X  - \bar Y < 7.729016
+$$
+Given that $\mu_x = \mu_y$, 
+$$
+\bar X - \bar Y \dot\sim N\left(0, \frac{25^2}{100} + \frac{25^2}{300}\right) = N(0, 8.33)
+$$
+
+Transform to get to a standard normal.
+$$
+\frac{\bar X - \bar Y - 0}{\sqrt{8.33}} \sim N(0, 1)
+$$
+Apply the transformation to the bounds found earlier.
+$$
+(-7.729016, 7.729016 ) \to (-2.677945, 2.677945)
+$$
+Now we can compute the probability
+$$
+P(\text{CI overlap}) = \Phi(2.677945) - \Phi(-2.677945) = 0.9925925
+$$
+This means that checking to see if the two CI's overlap is more conservative than seeing if the CI for 2 means includes 0.
+
+## c
+We repeat out work for part a), but this time
+$$
+\bar X - \bar Y \dot\sim N\left(-6, \frac{25^2}{100} + \frac{25^2}{300}\right) = N(-6, 8.33)
+$$
+We get the interval
+$$
+ \bar X - \bar Y \pm 1.96*25\sqrt{\frac{1}{100} + \frac{1}{300}}
+$$
+Therefore, for interval to include 0, the following must be true
+$$
+\bar X - \bar Y -1.96*25\sqrt{\frac{1}{100} + \frac{1}{300}} < 0 < \bar X - \bar Y + 1.96*25\sqrt{\frac{1}{100} + \frac{1}{300}}
+$$
+Simplify.
+$$
+\bar X - \bar Y - 5.658033  < 0 < \bar X - \bar Y + 5.658033
+$$
+Subtract $\bar X - \bar Y$ and multiply by -1 to get
+$$
+- 5.658033 < \bar X - \bar Y < 5.658033
+$$
+Now use a z-transform to get to a standard normal.
+$$
+\frac{- 5.658033 + 6}{\sqrt{8.33}} < \frac{\bar X - \bar Y + 6}{\sqrt{8.33}} < \frac{ 5.658033+6}{\sqrt{8.33}}
+$$
+Therefore
+$$
+P(\text{CI includes 0}) = \Phi\left(\frac{5.658033 + 6}{\sqrt{8.33}}\right) - \Phi\left( \frac{- 5.658033 + 6}{\sqrt{8.33}}\right) = 0.4528151
+$$
+
+## d
+Once again we have the CIs
+$$
+\bar X \pm 1.96*\frac{25}{\sqrt{100}} 
+$$
+and
+$$
+\bar Y \pm 1.96*\frac{25}{\sqrt{300}} 
+$$
+
+We can repeat the work from b) to find the bounds on $\bar X - \bar Y$ needed for the CIs to intersect.
+$$
+- 7.729016 < \bar X - \bar Y < 7.729016
+$$
+We then normalize using the new value of $\mu_x -\mu_y$.
+$$
+\frac{- 7.729016+6}{\sqrt{8.33}} < \frac{\bar X - \bar Y+6}{\sqrt{8.33}} < \frac{7.729016+6}{\sqrt{8.33}}
+$$
+Now compute the probability.
+$$
+P(\text{CIs intersect}) = \Phi\left(\frac{7.729016 + 6}{\sqrt{8.33}}\right) - \Phi\left( \frac{- 7.729016 + 6}{\sqrt{8.33}}\right) = 0.7254354
+$$
 
 # 4
 
