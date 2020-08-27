@@ -108,9 +108,22 @@ Under $H_0$, $F^* \sim F(1, 249) \equiv t(249)$. Since the degrees of freedom ar
 ## a
 Since we know $\sigma$ is known, we can use a Z-test instead of t-test to derive the interval. $E(\bar X - \bar Y) = 0$ since $\mu_x - \mu_y = 0$. $\operatorname{Var}(\bar X - \bar Y) = \frac{25^2}{100} + \frac{25^2}{300}$ since the samples are independent. Therefore, $\bar X - \bar Y \dot\sim N(0, \frac{25^2}{100} + \frac{25^2}{300})$. Therefore we can use the usual normal CI.
 $$
-P \left(\bar X - \bar Y - 1.96*25\sqrt{\frac{1}{100} + \frac{1}{300}} < \mu_x-\mu_y < \bar X - \bar Y + 1.96*25\sqrt{\frac{1}{100} + \frac{1}{300}}\right) = .95
+\bar X - \bar Y - 1.96*25\sqrt{\frac{1}{100} + \frac{1}{300}} < 0 < \bar X - \bar Y + 1.96*25\sqrt{\frac{1}{100} + \frac{1}{300}}
 $$
-Therefore, the probability that the CI includes 0 is .95 because that is literally how the CI is defined.
+Simplify and move $\bar X - \bar Y$ to the middle
+$$
+-5.658033 < \bar X - \bar Y< 5.658033
+$$
+Transform to standard normal.
+$$
+\frac{- 5.658033}{\sqrt{8.33}} < \frac{\bar X - \bar Y}{\sqrt{8.33}} < \frac{ 5.658033}{\sqrt{8.33}}
+$$
+
+Therefore
+$$
+P(\text{CI includes 0}) = \Phi\left(\frac{5.658033}{\sqrt{8.33}}\right) - \Phi\left( \frac{- 5.658033}{\sqrt{8.33}}\right) = 0.95005
+$$
+We could have gotten this result right away by noting that the definition of a 95% CI is that will include the true value with probability .95.
 
 ## b
 Using the usual normal confidence intervals, the CI for $\mu_x$ is
@@ -208,6 +221,46 @@ Now compute the probability.
 $$
 P(\text{CIs intersect}) = \Phi\left(\frac{7.729016 + 6}{\sqrt{8.33}}\right) - \Phi\left( \frac{- 7.729016 + 6}{\sqrt{8.33}}\right) = 0.7254354
 $$
+
+## Simulation
+```{r}
+# change the parameters for a,b and c,d
+S = 1e4 # number of simulations
+nx = 100
+ny = 300
+mux = 0
+muy = 0
+sigma = 25
+mudiff = mux-muy
+se = sigma*sqrt(1/nx + 1/ny)
+
+
+# difference in means CI
+diff_cover = logical(S)
+for (i in 1:S) { 
+  sx_i <- rnorm(nx, mux, 25)
+  sy_i <- rnorm(ny, muy, 25)
+  L = mean(sx_i - sy_i) - 1.96*se
+  U = mean(sx_i - sy_i) + 1.96*se
+  diff_cover[i] = L < 0 & U > 0
+}
+
+# 2 confidence intervals
+intersect = logical(S)
+for (i in 1:S) {
+  sx_i <- rnorm(nx, mux, 25)
+  sy_i <- rnorm(ny, muy, 25)
+  L_x = mean(sx_i) - 1.96*(sigma/sqrt(nx))
+  U_x = mean(sx_i) + 1.96*(sigma/sqrt(nx))
+  L_y = mean(sy_i) - 1.96*(sigma/sqrt(ny))
+  U_y = mean(sy_i) + 1.96*(sigma/sqrt(ny))
+  intersect[i] = L_x < U_y & U_x > L_y
+}
+
+mean(diff_cover)
+mean(intersect)
+```
+Running the simulation gives answers of 0.9493 and 0.992 for a) and b) respectively. For parts c) and d), the simulation gives 0.4579 and 0.7258.
 
 # 4
 
