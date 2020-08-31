@@ -280,7 +280,11 @@ f_{X_1|X_2}(x_1) = \frac{2e^{-(x_1 + x_2)}}{2e^{-x_2}-2e^{-2x_2}} = \frac{e^{-x_
 $$
 Therefore
 $$
-E[X_1 | X_2 = 2] = \int_0^2 \frac{1}{1-e^{-2}}e^{-x_1}dx_1 = \frac{1}{1-e^{-2}}\left[ -e^{-x_1}\right]^2_0 = -\frac{e^{-2}}{1-e^{-2}} + \frac{1}{1-e^{-2}} = 1
+E[X_1 | X_2 = 2] = \int_0^2 x_1\frac{1}{1-e^{-2}}e^{-x_1}dx_1 =  \frac{1}{1-e^{-2}}\int_0^2 x_1e^{-x_1}dx_1
+$$
+Integrate by parts: $u = x_1$, $du = dx_1$, $dv = e^{-x_1}$, $v = -e^{-x_1}$.
+$$
+= \frac{1}{1-e^{-2}}\left( -x_1e^{-x_1}|^2_0 - \int_0^2 -e^{-x_1} dx_1\right) = \frac{1}{1-e^{-2}} \left( -3e^{-2} + 1\right) \approx 0.6869647
 $$
 
 ## c
